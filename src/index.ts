@@ -1,14 +1,17 @@
 import { Navigation } from 'react-native-navigation'
 
-import App from './App'
+import { withProvider } from './Provider'
+import Login from './components/Login'
 
-Navigation.registerComponent(`WelcomeScreen`, () => App)
+console.disableYellowBox = true
+
+Navigation.registerComponent(`Login`, () => withProvider(Login))
 
 Navigation.events().registerAppLaunchedListener(() => {
 	Navigation.setRoot({
 		root: {
 			component: {
-				name: 'WelcomeScreen'
+				name: 'Login'
 			}
 		}
 	})
