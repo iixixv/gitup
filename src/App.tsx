@@ -1,18 +1,22 @@
-import React, { Component } from 'react'
+import * as React from 'react'
 import { Platform, StyleSheet, Text, View } from 'react-native'
+import Hello from './components/Hello'
 
 const instructions = Platform.select({
 	ios: 'Press Cmd+R to reload,\n' + 'Cmd+D or shake for dev menu',
 	android: 'Shake or press menu button for dev'
 })
 
-export default class App extends Component {
+export default class App extends React.Component {
 	render() {
 		return (
 			<View style={styles.container}>
 				<Text style={styles.welcome}>Welcome to React Native!</Text>
-				<Text style={styles.instructions}>To get started, edit App.js</Text>
+				<Text style={styles.instructions}>
+					To get started, edit App.js
+				</Text>
 				<Text style={styles.instructions}>{instructions}</Text>
+				<Hello />
 			</View>
 		)
 	}
