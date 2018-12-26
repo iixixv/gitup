@@ -52,7 +52,7 @@ export default class Login extends React.Component<IProps> {
 					return (
 						<View style={styles.container}>
 							<View style={styles.loginForm}>
-								<Text style={styles.loginHeader}> GITUP </Text>
+								<Text style={styles.loginHeader}> GIT"UP </Text>
 								<TextInput
 									style={{
 										...styles.loginInput,
@@ -124,13 +124,13 @@ const styles = StyleSheet.create({
 	loginForm: {
 		justifyContent: 'center',
 		width: 300,
-		height: 460,
+		height: 430,
 		backgroundColor: 'white',
 		padding: 20,
 		borderRadius: 10
 	},
 	loginHeader: {
-		fontSize: 50,
+		fontSize: 60,
 		fontWeight: 'bold',
 		marginBottom: 80,
 		alignSelf: 'center'
