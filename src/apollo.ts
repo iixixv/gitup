@@ -1,4 +1,5 @@
 import ApolloClient from 'apollo-boost'
+
 import { getToken } from './utils/auth'
 
 export const client = new ApolloClient({
