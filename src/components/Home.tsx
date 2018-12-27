@@ -7,13 +7,12 @@ import {
 	Image,
 	TouchableHighlight
 } from 'react-native'
-
+import { Navigation } from 'react-native-navigation'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import { removeToken } from '../utils/auth'
 import { goLogin } from '../navigation/navigation'
-import { Navigation } from 'react-native-navigation'
 
 const VIEWER = gql`
 	query {
@@ -34,6 +33,19 @@ interface IProps {
 }
 
 export default class Home extends React.Component<IProps> {
+	static get options() {
+		return {
+			topBar: {
+				visible: false,
+				_height: 0,
+				drawBehind: true
+				// title: {
+				// 	text: 'GIT"UP'
+				// }
+			}
+		}
+	}
+
 	render() {
 		return (
 			<Query query={VIEWER}>
