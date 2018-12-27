@@ -1,6 +1,13 @@
 import * as React from 'react'
-import { View, Text, ActivityIndicator, FlatList } from 'react-native'
+import {
+	View,
+	Text,
+	ActivityIndicator,
+	FlatList,
+	StyleSheet
+} from 'react-native'
 import { ListItem, Body, Right } from 'native-base'
+import { Navigation } from 'react-native-navigation'
 
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -11,11 +18,14 @@ const GET_REPOS = gql`
 	query {
 		viewer {
 			login
-			repositories(last: 20) {
+			repositories(first: 100) {
 				edges {
 					node {
 						id
 						name
+						owner {
+							login
+						}
 						description
 						createdAt
 						primaryLanguage {
@@ -33,12 +43,21 @@ const GET_REPOS = gql`
 	}
 `
 
-export default class Repos extends React.Component {
+interface IProps {
+	componentId: any
+}
+
+export default class Repos extends React.Component<IProps> {
 	render() {
 		return (
 			<Query query={GET_REPOS}>
 				{({ loading, data }) => {
-					if (loading) return <ActivityIndicator size="small" />
+					if (loading)
+						return (
+							<View style={styles.container}>
+								<ActivityIndicator size="large" color="grey" />
+							</View>
+						)
 					if (!data) goLogin()
 
 					if (data)
@@ -47,7 +66,28 @@ export default class Repos extends React.Component {
 								<FlatList
 									data={data.viewer.repositories.edges}
 									renderItem={({ item }: any) => (
-										<ListItem onPress={() => {}}>
+										<ListItem
+											onPress={() => {
+												Navigation.push(
+													this.props.componentId,
+													{
+														component: {
+															id: item.node.id,
+															name: 'Repo',
+															passProps: {
+																name:
+																	item.node
+																		.name,
+																owner:
+																	item.node
+																		.owner
+																		.login
+															}
+														}
+													}
+												)
+											}}
+										>
 											<Body>
 												<Text>{item.node.name}</Text>
 											</Body>
@@ -66,3 +106,12 @@ export default class Repos extends React.Component {
 		)
 	}
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
+		// backgroundColor: 'lightgrey'
+	}
+})
