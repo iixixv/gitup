@@ -1,8 +1,8 @@
 import * as React from 'react'
-import { View, Text, StyleSheet } from 'react-native'
 
 import { getToken } from '../utils/auth'
 import { goHome, goLogin } from './navigation'
+import Loader from '../components/Loader'
 
 export default class Welcome extends React.Component {
 	async componentDidMount() {
@@ -17,21 +17,6 @@ export default class Welcome extends React.Component {
 	}
 
 	render() {
-		return (
-			<View style={styles.container}>
-				<Text style={styles.welcome}>Welcome</Text>
-			</View>
-		)
+		return <Loader />
 	}
 }
-
-const styles = StyleSheet.create({
-	welcome: {
-		fontSize: 28
-	},
-	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center'
-	}
-})
