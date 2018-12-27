@@ -1,11 +1,10 @@
 import * as React from 'react'
 import {
 	View,
-	Button,
 	Text,
 	TextInput,
-	ActivityIndicator,
-	StyleSheet
+	StyleSheet,
+	TouchableHighlight
 } from 'react-native'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -13,6 +12,8 @@ import gql from 'graphql-tag'
 import { encode } from '../utils/encode'
 import { setToken, removeToken } from '../utils/auth'
 import { goHome } from '../navigation/navigation'
+import Loader from './Loader'
+import { colors } from '../styles/colors'
 
 const VIEWER = gql`
 	query Viewer {
@@ -42,23 +43,20 @@ export default class Login extends React.Component<IProps> {
 				}}
 			>
 				{({ loading, data, refetch }) => {
-					if (loading)
-						return (
-							<View style={styles.container}>
-								<ActivityIndicator size="large" color="grey" />
-							</View>
-						)
-
+					if (loading) return <Loader />
 					return (
 						<View style={styles.container}>
-							<View style={styles.loginForm}>
-								<Text style={styles.loginHeader}> GIT"UP </Text>
+							<View>
+								<Text style={styles.welcome}>Welcome,</Text>
+								<Text style={styles.instructions}>
+									sign in to continue
+								</Text>
 								<TextInput
 									style={{
-										...styles.loginInput,
+										...styles.input,
 										borderColor: invalid
-											? 'tomato'
-											: 'lightgrey'
+											? colors.accent
+											: colors.primary
 									}}
 									placeholder="Email or username"
 									placeholderTextColor="lightgrey"
@@ -71,10 +69,10 @@ export default class Login extends React.Component<IProps> {
 								/>
 								<TextInput
 									style={{
-										...styles.loginInput,
+										...styles.input,
 										borderColor: invalid
-											? 'tomato'
-											: 'lightgrey'
+											? colors.accent
+											: colors.primary
 									}}
 									placeholderTextColor="lightgrey"
 									placeholder="Password"
@@ -86,12 +84,14 @@ export default class Login extends React.Component<IProps> {
 									value={password}
 								/>
 
-								<Text style={styles.loginMessage}>
-									{invalid && 'Wrong username or password!'}
+								<Text style={styles.message}>
+									{invalid ? 'Wrong email or password!' : ''}
 								</Text>
 
-								<Button
-									title={loading ? 'Loading...' : 'Login'}
+								<TouchableHighlight
+									underlayColor={colors.lightgrey}
+									activeOpacity={90}
+									style={styles.signin}
 									onPress={async () => {
 										const encoded = encode(email, password)
 
@@ -104,7 +104,11 @@ export default class Login extends React.Component<IProps> {
 										}
 									}}
 									disabled={email && password ? false : true}
-								/>
+								>
+									<Text style={styles.signinText}>
+										SIGN IN
+									</Text>
+								</TouchableHighlight>
 							</View>
 						</View>
 					)
@@ -118,35 +122,40 @@ const styles = StyleSheet.create({
 	container: {
 		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center',
-		backgroundColor: 'lightgrey'
+		alignItems: 'center'
 	},
-	loginForm: {
-		justifyContent: 'center',
-		width: 300,
-		height: 430,
-		backgroundColor: 'white',
-		padding: 20,
-		borderRadius: 10
+	welcome: {
+		fontSize: 30,
+		color: colors.black,
+		fontWeight: 'bold'
 	},
-	loginHeader: {
-		fontSize: 60,
+
+	instructions: {
+		fontSize: 25,
+		color: colors.grey,
 		fontWeight: 'bold',
-		marginBottom: 80,
-		alignSelf: 'center'
+		marginBottom: 60
 	},
-	loginInput: {
-		padding: 5,
-		paddingLeft: 15,
-		paddingRight: 15,
-		marginBottom: 15,
-		borderWidth: 1,
-		borderColor: 'lightgrey',
-		borderRadius: 3
+	input: {
+		marginBottom: 20,
+		borderBottomWidth: 2,
+		borderColor: colors.primary
 	},
-	loginMessage: {
-		color: 'tomato',
-		marginBottom: 10,
-		alignSelf: 'center'
+	message: {
+		color: colors.accent,
+		marginBottom: 20,
+		alignSelf: 'flex-start'
+	},
+	signin: {
+		backgroundColor: colors.primary,
+		padding: 20,
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 5
+	},
+	signinText: {
+		fontSize: 15,
+		color: colors.black,
+		fontWeight: 'bold'
 	}
 })
