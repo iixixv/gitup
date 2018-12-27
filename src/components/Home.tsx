@@ -1,71 +1,102 @@
 import * as React from 'react'
-import { View, Text, ActivityIndicator, Button, FlatList } from 'react-native'
-import { List, ListItem, Body, Right, Icon } from 'native-base'
-import Ionicons from 'react-native-vector-icons/Ionicons'
+import {
+	View,
+	Text,
+	ActivityIndicator,
+	StyleSheet,
+	Image,
+	TouchableHighlight
+} from 'react-native'
 
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import { removeToken } from '../utils/auth'
 import { goLogin } from '../navigation/navigation'
+import { Navigation } from 'react-native-navigation'
 
 const VIEWER = gql`
 	query {
 		viewer {
+			avatarUrl
+			name
+			websiteUrl
 			login
-			repositories(last: 20) {
-				edges {
-					node {
-						id
-						name
-						description
-						createdAt
-						primaryLanguage {
-							name
-						}
-						refs(first: 10, refPrefix: "refs/heads/") {
-							nodes {
-								name
-							}
-						}
-					}
-				}
+			repositories {
+				totalCount
 			}
 		}
 	}
 `
 
-export default class Home extends React.Component {
+interface IProps {
+	componentId: any
+}
+
+export default class Home extends React.Component<IProps> {
 	render() {
 		return (
 			<Query query={VIEWER}>
 				{({ loading, data, client }) => {
-					if (loading) return <ActivityIndicator size="small" />
+					if (loading)
+						return (
+							<View style={styles.container}>
+								<ActivityIndicator size="large" color="grey" />
+							</View>
+						)
 					if (!data) goLogin()
 
 					if (data)
 						return (
-							<View style={{ flex: 1, justifyContent: 'center' }}>
-								<FlatList
-									data={data.viewer.repositories.edges}
-									renderItem={({ item }: any) => (
-										<ListItem onPress={() => {}}>
-											<Body>
-												<Text>{item.node.name}</Text>
-											</Body>
-											<Right>
-												<Text />
-												{/* <Ionicons name="ios-add" /> */}
-												{/* <Icon
-													name="arrow-forward"
-													// size={20}
-												/> */}
-											</Right>
-										</ListItem>
-									)}
-									keyExtractor={(item: any) => item.node.id}
-								/>
-
+							<View style={styles.container}>
+								<TouchableHighlight
+									activeOpacity={90}
+									onPress={async () => {
+										try {
+											await removeToken()
+											client.resetStore()
+											goLogin()
+										} catch (e) {
+											console.log(e)
+										}
+									}}
+									underlayColor="black"
+								>
+									<Text>Logout</Text>
+								</TouchableHighlight>
+								<View style={styles.profile}>
+									<Image
+										source={{ uri: data.viewer.avatarUrl }}
+										style={styles.avatar}
+									/>
+									<Text style={styles.name}>
+										{data.viewer.name}
+									</Text>
+									<Text style={styles.login}>
+										{data.viewer.login}
+									</Text>
+									<TouchableHighlight
+										activeOpacity={90}
+										onPress={() => {
+											Navigation.push(
+												this.props.componentId,
+												{
+													component: {
+														name: 'Repos'
+													}
+												}
+											)
+										}}
+										underlayColor="black"
+										style={styles.repos}
+									>
+										<Text style={styles.reposText}>
+											{'Repositories : ' +
+												data.viewer.repositories
+													.totalCount}
+										</Text>
+									</TouchableHighlight>
+								</View>
 								{/* <Button
 									title="Logout"
 									onPress={async () => {
@@ -86,3 +117,39 @@ export default class Home extends React.Component {
 		)
 	}
 }
+
+const styles = StyleSheet.create({
+	container: {
+		flex: 1,
+		justifyContent: 'center',
+		alignItems: 'center'
+		// backgroundColor: 'lightgrey'
+	},
+	profile: {
+		// alignItems: 'center'
+	},
+
+	avatar: {
+		width: 200,
+		height: 200,
+		borderRadius: 10
+	},
+	name: {
+		fontSize: 25,
+		alignSelf: 'center'
+	},
+	login: {
+		marginBottom: 15,
+		alignSelf: 'center'
+	},
+	repos: {
+		borderRadius: 3,
+		backgroundColor: 'grey',
+		padding: 15
+	},
+	reposText: {
+		alignSelf: 'center',
+		color: 'white',
+		textDecorationLine: 'underline'
+	}
+})
