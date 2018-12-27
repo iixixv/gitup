@@ -16,6 +16,11 @@ const GET_REPO = gql`
 			name
 			description
 			createdAt
+			refs(first: 10, refPrefix: "refs/heads/") {
+				nodes {
+					name
+				}
+			}
 			languages(first: 10) {
 				nodes {
 					id
@@ -55,6 +60,13 @@ export default class Repo extends React.Component<IProps> {
 								<Text>
 									Created At: {data.repository.description}
 								</Text>
+								<FlatList
+									data={data.repository.refs.nodes}
+									renderItem={({ item }: any) => (
+										<Text>{item.name}</Text>
+									)}
+									keyExtractor={(item: any) => item.id}
+								/>
 								<FlatList
 									data={data.repository.languages.nodes}
 									renderItem={({ item }: any) => (
