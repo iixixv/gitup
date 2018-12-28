@@ -93,7 +93,8 @@ export default class Repos extends React.Component<IProps> {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1
+		flex: 1,
+		backgroundColor: colors.white
 	},
 	item: {
 		fontSize: 17,

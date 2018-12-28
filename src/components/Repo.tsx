@@ -99,7 +99,8 @@ export default class Repo extends React.Component<IProps> {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		padding: 50
+		padding: 50,
+		backgroundColor: colors.white
 	},
 	header: {
 		fontSize: 25,

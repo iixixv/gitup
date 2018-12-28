@@ -55,7 +55,8 @@ export default class Info extends React.Component {
 const styles = StyleSheet.create({
 	container: {
 		padding: 50,
-		flex: 1
+		flex: 1,
+		backgroundColor: colors.white
 	},
 	header: {
 		fontSize: 25,
