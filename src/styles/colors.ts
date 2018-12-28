@@ -3,5 +3,6 @@ export const colors = {
 	accent: '#5E5BDF',
 	black: '#3C3C3C',
 	grey: '#CACACA',
-	lightgrey: '#ECECEC'
+	lightgrey: '#ECECEC',
+	white: '#FFFFFF'
 }
