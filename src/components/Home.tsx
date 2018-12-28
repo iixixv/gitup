@@ -27,9 +27,34 @@ export default class Home extends React.Component<IProps> {
 		return {
 			topBar: {
 				visible: false,
-				animate: false,
 				drawBehind: true
 			}
+		}
+	}
+
+	handleInfoPress = (id: any) => {
+		Navigation.push(id, {
+			component: {
+				name: 'Info'
+			}
+		})
+	}
+
+	handleReposPress = (id: any) => {
+		Navigation.push(id, {
+			component: {
+				name: 'Repos'
+			}
+		})
+	}
+
+	handleLogoutPress = async (client: any) => {
+		try {
+			await removeToken()
+			client.resetStore()
+			goLogin()
+		} catch (e) {
+			console.log(e)
 		}
 	}
 
@@ -47,13 +72,8 @@ export default class Home extends React.Component<IProps> {
 									activeOpacity={90}
 									underlayColor={colors.primary}
 									onPress={() => {
-										Navigation.push(
-											this.props.componentId,
-											{
-												component: {
-													name: 'Info'
-												}
-											}
+										this.handleInfoPress(
+											this.props.componentId
 										)
 									}}
 									style={styles.info}
@@ -73,16 +93,11 @@ export default class Home extends React.Component<IProps> {
 									<TouchableHighlight
 										activeOpacity={90}
 										underlayColor={colors.primary}
-										onPress={() => {
-											Navigation.push(
-												this.props.componentId,
-												{
-													component: {
-														name: 'Repos'
-													}
-												}
+										onPress={() =>
+											this.handleReposPress(
+												this.props.componentId
 											)
-										}}
+										}
 										style={styles.repos}
 									>
 										<Text style={styles.reposText}>
@@ -95,15 +110,9 @@ export default class Home extends React.Component<IProps> {
 									style={styles.logout}
 									activeOpacity={90}
 									underlayColor={colors.primary}
-									onPress={async () => {
-										try {
-											await removeToken()
-											client.resetStore()
-											goLogin()
-										} catch (e) {
-											console.log(e)
-										}
-									}}
+									onPress={() =>
+										this.handleLogoutPress(client)
+									}
 								>
 									<Text style={styles.logoutText}>
 										Logout
