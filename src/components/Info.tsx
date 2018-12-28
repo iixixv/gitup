@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
 		fontSize: 25,
 		fontWeight: 'bold',
 		color: colors.accent,
-		textDecorationLine: 'underline',
 		marginBottom: 30
 	},
 	item: {
