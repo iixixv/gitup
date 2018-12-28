@@ -16,7 +16,7 @@ import Loader from './Loader'
 import { colors } from '../styles/colors'
 
 const VIEWER = gql`
-	query Viewer {
+	query viewer {
 		viewer {
 			login
 		}
@@ -105,7 +105,15 @@ export default class Login extends React.Component<IProps> {
 									}}
 									disabled={email && password ? false : true}
 								>
-									<Text style={styles.signinText}>
+									<Text
+										style={{
+											...styles.signinText,
+											color:
+												email && password
+													? colors.accent
+													: colors.black
+										}}
+									>
 										SIGN IN
 									</Text>
 								</TouchableHighlight>
