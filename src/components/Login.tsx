@@ -101,6 +101,11 @@ export default class Login extends React.Component<IProps> {
 
 										if (!data) {
 											this.setState({ invalid: true })
+											setTimeout(() => {
+												this.setState({
+													invalid: false
+												})
+											}, 3000)
 										}
 									}}
 									disabled={email && password ? false : true}
