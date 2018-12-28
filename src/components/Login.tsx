@@ -35,15 +35,14 @@ export default class Login extends React.Component<IProps> {
 			<Query
 				query={VIEWER}
 				onCompleted={async (data) => {
-					if (!data) {
+					if (!data && !data.viewer) {
 						await removeToken()
-					} else {
-						goHome()
 					}
 				}}
 			>
 				{({ loading, data, refetch }) => {
 					if (loading) return <Loader />
+					if (data && data.viewer) goHome()
 					return (
 						<View style={styles.container}>
 							<View>
