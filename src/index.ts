@@ -2,7 +2,7 @@ import { Navigation } from 'react-native-navigation'
 
 import { registerScreens } from './navigation/screens'
 
-// console.disableYellowBox = true
+console.disableYellowBox = true
 
 registerScreens()
 
