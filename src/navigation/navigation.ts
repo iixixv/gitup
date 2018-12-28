@@ -5,7 +5,7 @@ export const goHome = () =>
 	Navigation.setRoot({
 		root: {
 			stack: {
-				id: 'App',
+				id: 'appstack',
 				options: {
 					topBar: {
 						backButton: {
