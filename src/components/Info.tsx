@@ -12,17 +12,6 @@ export default class Info extends React.Component {
 		timezone: null
 	}
 
-	// static get options() {
-	// 	return {
-	// 		topBar: {
-	// 			title: {
-	// 				text: 'Info',
-	// 				alignment: 'left'
-	// 			}
-	// 		}
-	// 	}
-	// }
-
 	async componentDidMount() {
 		try {
 			const batteryLevel = await DeviceInfo.getBatteryLevel()
