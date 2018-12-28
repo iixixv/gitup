@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { View, Text, StyleSheet, FlatList } from 'react-native'
-
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
+
 import { colors } from '../styles/colors'
 import Loader from './Loader'
 
@@ -12,7 +12,7 @@ const GET_REPO = gql`
 			name
 			description
 			createdAt
-			refs(first: 10, refPrefix: "refs/heads/") {
+			refs(first: 100, refPrefix: "refs/heads/") {
 				nodes {
 					id
 					name
