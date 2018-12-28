@@ -101,7 +101,7 @@ export default class Home extends React.Component<IProps> {
 										style={styles.repos}
 									>
 										<Text style={styles.reposText}>
-											Repos
+											Repositories
 										</Text>
 									</TouchableHighlight>
 								</View>
@@ -146,7 +146,7 @@ const styles = StyleSheet.create({
 	profile: {
 		alignItems: 'center',
 		marginTop: 50,
-		marginBottom: 80
+		marginBottom: 50
 	},
 	avatar: {
 		width: 200,
@@ -159,7 +159,6 @@ const styles = StyleSheet.create({
 	name: {
 		fontSize: 15,
 		color: colors.black,
-		fontWeight: 'bold',
 		fontStyle: 'italic',
 		marginBottom: 10
 	},
