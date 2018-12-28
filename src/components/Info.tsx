@@ -71,18 +71,20 @@ const styles = StyleSheet.create({
 	header: {
 		fontSize: 25,
 		fontWeight: 'bold',
-		color: colors.black,
-		marginBottom: 50
+		color: colors.accent,
+		textDecorationLine: 'underline',
+		marginBottom: 30
 	},
 	item: {
 		fontSize: 17,
 		fontWeight: 'bold',
 		color: colors.black,
-		marginBottom: 10
+		marginTop: 30,
+		marginBottom: 5
 	},
 	info: {
 		fontSize: 14,
-		marginBottom: 30,
+		marginBottom: 5,
 		marginLeft: 40,
 		color: colors.black
 	}
