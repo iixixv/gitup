@@ -1,29 +1,19 @@
 import * as React from 'react'
-import {
-	View,
-	Text,
-	ActivityIndicator,
-	StyleSheet,
-	Image,
-	TouchableHighlight
-} from 'react-native'
+import { View, Text, StyleSheet, Image, TouchableHighlight } from 'react-native'
 import { Navigation } from 'react-native-navigation'
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import { removeToken } from '../utils/auth'
 import { goLogin } from '../navigation/navigation'
+import Loader from './Loader'
+import { colors } from '../styles/colors'
 
 const VIEWER = gql`
-	query {
+	query viewer {
 		viewer {
 			avatarUrl
 			name
-			websiteUrl
-			login
-			repositories {
-				totalCount
-			}
 		}
 	}
 `
@@ -37,11 +27,8 @@ export default class Home extends React.Component<IProps> {
 		return {
 			topBar: {
 				visible: false,
-				_height: 0,
+				animate: false,
 				drawBehind: true
-				// title: {
-				// 	text: 'GIT"UP'
-				// }
 			}
 		}
 	}
@@ -50,12 +37,7 @@ export default class Home extends React.Component<IProps> {
 		return (
 			<Query query={VIEWER}>
 				{({ loading, data, client }) => {
-					if (loading)
-						return (
-							<View style={styles.container}>
-								<ActivityIndicator size="large" color="grey" />
-							</View>
-						)
+					if (loading) return <Loader />
 					if (!data) goLogin()
 
 					if (data)
@@ -63,19 +45,22 @@ export default class Home extends React.Component<IProps> {
 							<View style={styles.container}>
 								<TouchableHighlight
 									activeOpacity={90}
-									onPress={async () => {
-										try {
-											await removeToken()
-											client.resetStore()
-											goLogin()
-										} catch (e) {
-											console.log(e)
-										}
+									underlayColor={colors.primary}
+									onPress={() => {
+										Navigation.push(
+											this.props.componentId,
+											{
+												component: {
+													name: 'Info'
+												}
+											}
+										)
 									}}
-									underlayColor="black"
+									style={styles.info}
 								>
-									<Text>Logout</Text>
+									<Text style={styles.infoText}>Info</Text>
 								</TouchableHighlight>
+
 								<View style={styles.profile}>
 									<Image
 										source={{ uri: data.viewer.avatarUrl }}
@@ -84,11 +69,10 @@ export default class Home extends React.Component<IProps> {
 									<Text style={styles.name}>
 										{data.viewer.name}
 									</Text>
-									<Text style={styles.login}>
-										{data.viewer.login}
-									</Text>
+
 									<TouchableHighlight
 										activeOpacity={90}
+										underlayColor={colors.primary}
 										onPress={() => {
 											Navigation.push(
 												this.props.componentId,
@@ -99,18 +83,18 @@ export default class Home extends React.Component<IProps> {
 												}
 											)
 										}}
-										underlayColor="black"
 										style={styles.repos}
 									>
 										<Text style={styles.reposText}>
-											{'Repositories : ' +
-												data.viewer.repositories
-													.totalCount}
+											Repos
 										</Text>
 									</TouchableHighlight>
 								</View>
-								{/* <Button
-									title="Logout"
+
+								<TouchableHighlight
+									style={styles.logout}
+									activeOpacity={90}
+									underlayColor={colors.primary}
 									onPress={async () => {
 										try {
 											await removeToken()
@@ -120,7 +104,11 @@ export default class Home extends React.Component<IProps> {
 											console.log(e)
 										}
 									}}
-								/> */}
+								>
+									<Text style={styles.logoutText}>
+										Logout
+									</Text>
+								</TouchableHighlight>
 							</View>
 						)
 					return null
@@ -133,35 +121,57 @@ export default class Home extends React.Component<IProps> {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		justifyContent: 'center',
 		alignItems: 'center'
-		// backgroundColor: 'lightgrey'
+	},
+	info: {
+		alignSelf: 'flex-end',
+		padding: 10,
+		borderRadius: 20,
+		margin: 10
+	},
+	infoText: {
+		fontWeight: 'bold',
+		fontSize: 15,
+		color: colors.black
 	},
 	profile: {
-		// alignItems: 'center'
+		alignItems: 'center',
+		marginTop: 50,
+		marginBottom: 80
 	},
-
 	avatar: {
 		width: 200,
 		height: 200,
-		borderRadius: 10
+		borderRadius: 100,
+		borderWidth: 3,
+		borderColor: colors.accent,
+		marginBottom: 30
 	},
 	name: {
-		fontSize: 25,
-		alignSelf: 'center'
-	},
-	login: {
-		marginBottom: 15,
-		alignSelf: 'center'
+		fontSize: 15,
+		color: colors.black,
+		fontWeight: 'bold',
+		fontStyle: 'italic',
+		marginBottom: 10
 	},
 	repos: {
-		borderRadius: 3,
-		backgroundColor: 'grey',
-		padding: 15
+		padding: 20,
+		borderRadius: 5
 	},
 	reposText: {
-		alignSelf: 'center',
-		color: 'white',
-		textDecorationLine: 'underline'
+		color: colors.accent,
+		fontWeight: 'bold',
+		fontSize: 20
+	},
+	logout: {
+		padding: 20,
+		justifyContent: 'center',
+		alignItems: 'center',
+		borderRadius: 5
+	},
+	logoutText: {
+		fontSize: 15,
+		color: colors.black,
+		fontWeight: 'bold'
 	}
 })
