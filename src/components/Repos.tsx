@@ -2,17 +2,17 @@ import * as React from 'react'
 import {
 	View,
 	Text,
-	ActivityIndicator,
 	FlatList,
-	StyleSheet
+	StyleSheet,
+	TouchableHighlight
 } from 'react-native'
-import { ListItem, Body, Right } from 'native-base'
 import { Navigation } from 'react-native-navigation'
-
 import { Query } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import { goLogin } from '../navigation/navigation'
+import Loader from './Loader'
+import { colors } from '../styles/colors'
 
 const GET_REPOS = gql`
 	query {
@@ -25,16 +25,6 @@ const GET_REPOS = gql`
 						name
 						owner {
 							login
-						}
-						description
-						createdAt
-						primaryLanguage {
-							name
-						}
-						refs(first: 10, refPrefix: "refs/heads/") {
-							nodes {
-								name
-							}
 						}
 					}
 				}
@@ -52,21 +42,18 @@ export default class Repos extends React.Component<IProps> {
 		return (
 			<Query query={GET_REPOS}>
 				{({ loading, data }) => {
-					if (loading)
-						return (
-							<View style={styles.container}>
-								<ActivityIndicator size="large" color="grey" />
-							</View>
-						)
+					if (loading) return <Loader />
 					if (!data) goLogin()
 
 					if (data)
 						return (
-							<View style={{ flex: 1, justifyContent: 'center' }}>
+							<View style={styles.container}>
 								<FlatList
 									data={data.viewer.repositories.edges}
 									renderItem={({ item }: any) => (
-										<ListItem
+										<TouchableHighlight
+											activeOpacity={90}
+											underlayColor={colors.primary}
 											onPress={() => {
 												Navigation.push(
 													this.props.componentId,
@@ -88,13 +75,10 @@ export default class Repos extends React.Component<IProps> {
 												)
 											}}
 										>
-											<Body>
-												<Text>{item.node.name}</Text>
-											</Body>
-											<Right>
-												<Text />
-											</Right>
-										</ListItem>
+											<Text style={styles.item}>
+												{item.node.name}
+											</Text>
+										</TouchableHighlight>
 									)}
 									keyExtractor={(item: any) => item.node.id}
 								/>
@@ -109,9 +93,15 @@ export default class Repos extends React.Component<IProps> {
 
 const styles = StyleSheet.create({
 	container: {
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center'
-		// backgroundColor: 'lightgrey'
+		flex: 1
+	},
+	item: {
+		fontSize: 17,
+		fontWeight: 'bold',
+		color: colors.black,
+		padding: 20,
+		marginLeft: 50,
+		borderBottomWidth: 3,
+		borderBottomColor: colors.primary
 	}
 })
