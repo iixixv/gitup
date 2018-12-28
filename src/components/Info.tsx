@@ -1,7 +1,9 @@
 import * as React from 'react'
-import { Text, View } from 'react-native'
+import { Text, View, StyleSheet } from 'react-native'
 import DeviceInfo from 'react-native-device-info'
 import ISO from 'iso-639-1'
+
+import { colors } from '../styles/colors'
 
 export default class Info extends React.Component {
 	state = {
@@ -9,6 +11,17 @@ export default class Info extends React.Component {
 		language: null,
 		timezone: null
 	}
+
+	// static get options() {
+	// 	return {
+	// 		topBar: {
+	// 			title: {
+	// 				text: 'Info',
+	// 				alignment: 'left'
+	// 			}
+	// 		}
+	// 	}
+	// }
 
 	async componentDidMount() {
 		try {
@@ -36,12 +49,41 @@ export default class Info extends React.Component {
 
 		if (battery)
 			return (
-				<View>
-					<Text> Battery: {battery} </Text>
-					<Text> Language: {language} </Text>
-					<Text> Time Zone : {timezone} </Text>
+				<View style={styles.container}>
+					<Text style={styles.header}>Info</Text>
+					<Text style={styles.item}> Battery </Text>
+					<Text style={styles.info}>{battery} </Text>
+					<Text style={styles.item}> Language </Text>
+					<Text style={styles.info}> {language} </Text>
+					<Text style={styles.item}> Time Zone </Text>
+					<Text style={styles.info}> {timezone} </Text>
 				</View>
 			)
 		return null
 	}
 }
+
+const styles = StyleSheet.create({
+	container: {
+		padding: 50,
+		flex: 1
+	},
+	header: {
+		fontSize: 25,
+		fontWeight: 'bold',
+		color: colors.black,
+		marginBottom: 50
+	},
+	item: {
+		fontSize: 17,
+		fontWeight: 'bold',
+		color: colors.black,
+		marginBottom: 10
+	},
+	info: {
+		fontSize: 14,
+		marginBottom: 30,
+		marginLeft: 40,
+		color: colors.black
+	}
+})
